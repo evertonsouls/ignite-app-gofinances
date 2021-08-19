@@ -17,7 +17,7 @@ type HighlightCardProps = {
   lastTransaction: string;
 }
 
-const icon = {
+const icons = {
   up: 'arrow-up-circle',
   down: 'arrow-down-circle',
   total: 'dollar-sign'
@@ -31,7 +31,7 @@ export function HighlightCard({ type, title, amount, lastTransaction}: Highlight
         <Title type={type}>{title}</Title>
         <Icon 
           type={type} 
-          name={icon[type]} 
+          name={icons[type]} 
         />
       </Header>
 

@@ -6,7 +6,6 @@ type TypeProps = {
   type: 'up' | 'down' | 'total';
 }
 
-
 export const Container = styled.View<TypeProps>`
   background-color: ${({ theme, type }) => 
     type === 'total' 
