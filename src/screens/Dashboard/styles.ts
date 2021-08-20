@@ -6,6 +6,7 @@ import { getBottomSpace, getStatusBarHeight } from 'react-native-iphone-x-helper
 import { Feather } from '@expo/vector-icons';
 
 import { TransactionCardData } from '../../components/TransactionCard';
+import theme from "../../global/styles/theme";
 
 type DataListProps = TransactionCardData & {
   id: string;
@@ -107,3 +108,9 @@ export const ListOfTransactions = styled(
     paddingBottom: getBottomSpace(),
   }
 })``
+
+export const LoadingContainer = styled.ActivityIndicator`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;

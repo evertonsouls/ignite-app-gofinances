@@ -1,3 +1,6 @@
+import 'intl';
+import 'intl/locale-data/jsonp/en-US';
+
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { NavigationContainer } from '@react-navigation/native';

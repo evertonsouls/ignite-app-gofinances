@@ -27,7 +27,7 @@ export function AppRoutes() {
         name="Dashboard" 
         component={Dashboard} 
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ color, size }) => (
             <MaterialIcons 
               name='format-list-bulleted' 
               size={size} 
