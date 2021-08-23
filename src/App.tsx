@@ -3,7 +3,8 @@ import 'intl/locale-data/jsonp/en-US';
 
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
+
 import AppLoading from 'expo-app-loading'
 import {
   useFonts,
@@ -12,9 +13,11 @@ import {
   Poppins_700Bold
 } from '@expo-google-fonts/poppins';
 
-import { AppRoutes } from './routes/app.routes';
+import { AuthProvider } from './context/AuthContext';
+
 import theme from './global/styles/theme';
-import { StatusBar } from 'react-native';
+import { Routes } from './routes';
+import { useAuth } from './hooks/useAuth';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,17 +25,18 @@ export default function App() {
     Poppins_500Medium,
     Poppins_700Bold
   });
+  const { isLoading } = useAuth();
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || isLoading) {
     return <AppLoading />;
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <StatusBar barStyle="light-content" />
-        <AppRoutes />
-      </NavigationContainer>
+      <StatusBar barStyle="light-content" />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

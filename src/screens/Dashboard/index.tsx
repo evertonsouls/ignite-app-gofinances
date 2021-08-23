@@ -23,6 +23,7 @@ import {
   Title,
   ListOfTransactions,
 } from './styles'
+import { useAuth } from '../../hooks/useAuth';
 
 type HighlightProps = {
   amount: string;
@@ -54,21 +55,26 @@ const formatNumber = (value: number) => {
 
 export function Dashboard() {
   const theme = useTheme();  
+  const { signOut, user, dataKey } = useAuth();
 
   function getLastTransactionDateByType(
     collection: DataListProps[], 
     type: 'positive' | 'negative'
   ) {
+    const filteredCollection = collection.filter(item => item.type === type);
+    if (filteredCollection.length === 0) {
+      return 'Not transaction registered';
+    }
+
     const lastTransaction = new Date(Math.max.apply(
-        Math, collection
-          .filter(item => item.type === type)
+        Math, filteredCollection
           .map(item => new Date(item.date).getTime()
         )
       )
     );
 
     const month = lastTransaction.toLocaleString('en-US', {month: 'long'});
-
+    
     return `Last transaction ${lastTransaction.getDate()} of ${month}`;
   }
 
@@ -80,7 +86,6 @@ export function Dashboard() {
   let expensiveTotal = 0;
 
   async function loadTransactions() {
-    const dataKey = '@gofinances:transactions';
     const transactionStore = await AsyncStorage.getItem(dataKey)
 
     const currentData = transactionStore ? JSON.parse(transactionStore) : [];
@@ -114,10 +119,12 @@ export function Dashboard() {
     const lastEntriesTransaction = getLastTransactionDateByType(transactions, 'positive');
     const lastExpensiveTransaction = getLastTransactionDateByType(transactions, 'negative');
     
-    const lastTransactionDate = transactions.length > 0 ? new Date(transactions[0].date) : new Date();
-    const lastTransaction = `Last transaction ${lastTransactionDate.getDate()} of ${
-      lastTransactionDate.toLocaleString('en-US', { month: 'long' })
-    } `
+    const lastTransactionDate = transactions.length > 0 ? new Date(transactions[0].date) : null;
+    const lastTransaction = lastTransactionDate 
+      ? `Last transaction 
+        ${lastTransactionDate.getDate()} of 
+        ${lastTransactionDate.toLocaleString('en-US', { month: 'long' })}`
+      : 'Not transaction registered';
         
     const total = entriesTotal -  expensiveTotal;
 
@@ -161,15 +168,15 @@ export function Dashboard() {
         <UserWrapper>
           <UserInfo>
             <Photo 
-              source={{ uri: 'https://avatars.githubusercontent.com/u/24877270' }} 
+              source={{ uri: user?.photo }} 
             />
             <User>
               <UserGreeting>Hello,</UserGreeting>
-              <UserName>Everton</UserName>
+              <UserName>{user!.name}</UserName>
             </User>
           </UserInfo>
 
-          <LogoutButton onPress={() => {}}>
+          <LogoutButton onPress={signOut}>
             <Icon name="power" />
           </LogoutButton>
 

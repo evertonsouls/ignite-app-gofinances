@@ -20,6 +20,7 @@ import {
   Fields,
   TransactionTypes
 } from './styles';
+import { useAuth } from '../../hooks/useAuth';
 
 type FormData = {
   name: string;
@@ -36,6 +37,7 @@ const schema = Yup.object().shape({
 
 export function Register() {
   const navigation = useNavigation()
+  const { dataKey } = useAuth();
 
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpened, setCategoryModalOpened] = useState(false);
@@ -84,8 +86,6 @@ export function Register() {
     }
 
     try { 
-      const dataKey = '@gofinances:transactions';
-
       const data = await AsyncStorage.getItem(dataKey);
       const currentData = data ? JSON.parse(data) : [];
 
@@ -97,8 +97,6 @@ export function Register() {
       const sortedData = collectionData.sort(function(a, b) {
         return new Date(b.date) - new Date(a.date);
       });
-
-      console.log(sortedData);
 
       await AsyncStorage.setItem(dataKey, JSON.stringify(sortedData));
 

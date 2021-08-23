@@ -21,6 +21,7 @@ import {
 } from './styles';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../hooks/useAuth';
 
 type TransactionData = {
   category: string;
@@ -45,17 +46,15 @@ type CategoryData = {
 export function Resume() {
   const theme = useTheme();
   const bottomTabBarHeight = useBottomTabBarHeight();
+  const { dataKey } = useAuth();
   
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [data, setData] = useState<CategoryData[]>([]);
 
   async function loadData() {
-
     setIsLoading(true);
-    
-    const dataKey = '@gofinances:transactions';
-
+  
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted : TransactionData[] = response ? JSON.parse(response) : [];
 
